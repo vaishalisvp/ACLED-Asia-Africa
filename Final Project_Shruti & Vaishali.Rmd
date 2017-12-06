@@ -1,0 +1,207 @@
+---
+title: "Final Project - Data Management with R"
+author: "Shruti Gogia (166869); Vaishali Venkatesh Prasad (169435)"
+date: "4 December 2017"
+output: pdf_document
+---
+
+##Armed conflicts in Asia and Africa (2015-16)
+
+![](C:/Users/Shruti Gogia/Dropbox/Final R/acled_logo.png)
+
+
+
+---------------------------------
+##Prerequisities
+```{r setup, include=FALSE}
+library(readxl)
+library(dplyr)
+library(ggplot2)
+library(ggmap)
+library(knitr)
+```
+
+```{r, eval=FALSE}
+library(readxl)
+library(dplyr)
+library(ggplot2)
+library(ggmap)
+library(knitr)
+```
+
+## Introduction
+
+## Importing the dataset
+
+## Data Cleaning
+
+## Preliminary Analysis
+
+## Regression Analysis
+
+
+
+
+
+
+## Interactive Visualization
+
+## Discussion
+
+## Conclusion
+
+
+\pagebreak
+
+##Appendix
+
+
+Table 1: Regression Table for Asia and Africa combined
+
+Dependent variable: Fatalities
+
+|     **Variable**               |**Model 1**|**Model 2**|**Model 3**|
+|--------------------------------|-----------|-----------|-----------|
+|**Continent**                   |           |           |           | 
+|                           Asia |-1.579\*** | -0.403\***| -0.479\***|
+|                                |  (0.07)   |    (0.07) |   (0.07)  |
+|**Actor Type (a)**              |           |           |           |  
+|                 Ethnic Militia |           |  2.183\***|  1.115\*  | 
+|                                |           |    (0.52) |   (0.52)  |
+|      Government/Mutinuous Force|           |  1.978\***|  1.257\*  |
+|                                |           |    (0.51) |   (0.51)  |
+|          Outside/External Force|           |  2.640\***|  1.777\** |
+|                                |           |    (0.54) |   (0.54)  |
+|               Political Militia|           |  0.533    | -0.051    |  
+|                                |           |    (0.51) |   (0.50)  |
+|                      Protestors|           | -0.631    | -0.364    |
+|                                |           |    (0.50) |   (0.55)  |
+|                     Rebel Force|           |  4.892\***|  4.016\***|
+|                                |           |    (0.52) |   (0.52)  |
+|                         Rioters|           | -0.531    | -0.303    |  
+|                                |           |    (0.50) |   (0.55)  |
+|**Event Type (b)**              |           |           |           |  
+|      Battle - No Change of trty|           |           | -2.159\***| 
+|                                |           |           |   (0.33)  |
+| Battle-Non-state actr wins trty|           |           |  2.290\***|
+|                                |           |           |   (0.58)  |
+|Headquarters or base established|           |           | -6.720\***|  
+|                                |           |           |   (1.53)  |
+|    Non-violent transfer of trty|           |           | -6.492\***| 
+|                                |           |           |   (0.56)  |
+|                 Remote Violence|           |           | -3.831\***|
+|                                |           |           |   (0.35)  |
+|                  Riots/Protests|           |           | -4.177\***|  
+|                                |           |           |   (0.41)  |
+|           Strategic Development|           |           | -5.843\***|
+|                                |           |           |   (0.35)  |
+|      Violence against civilians|           |           | -3.302\***|
+|                                |           |           |   (0.34)  |
+|**Intercept**                   | -1.900\***| 0.903     |  4.852\***|  
+|                                |  (0.04)   |    (0.50) |   (0.60)  |
+|--------------------------------|-----------|-----------|-----------|
+|           **N**                |  59436    |  59436    |    59436  |
+|   **Adjusted R- squared**      |  0.01     |    0.041  |    0.055  |
+Collinearity: (a) Civilian group excluded; (b) Battle - Government regains territory excluded
+
+\*p < 0.05; \**p < 0.01; \***p < 0.001
+
+\pagebreak
+
+Table 2: Regression Table for Africa 
+
+Dependent variable: Fatalities
+
+|     **Variable**               |**Model 1**|**Model 2**|**Model 3**|
+|--------------------------------|-----------|-----------|-----------|
+|**Actor Type (a)**              |           |           |           |  
+|                 Ethnic Militia |   3.376   |  0.298    | -0.097    | 
+|                                |  (2.63)   |    (2.62) |   (2.61)  |
+|      Government/Mutinuous Force|  2.854    |  0.147    |  0.014    |
+|                                |  (2.63)   |    (2.61) |   (2.60)  |
+|          Outside/External Force|  4.107    |  1.298    | 2.322     |
+|                                |  (2.64)   |    (2.63) |   (2.62)  |
+|               Political Militia|  1.313    | -1.143    | -1.275    |  
+|                                |  (2.63)   |    (2.61) |   (2.60)  |
+|                      Protestors|  1.957    | -1.558    | -2.005    |
+|                                |  (2.63)   |    (2.64) |   (2.63)  |
+|                     Rebel Force|  6.827\** |  3.930    | 3.357     |
+|                                |  (2.63)   |    (2.62) |   (2.61)  |
+|                         Rioters|  2.526    | -1.357    | -1.669    |  
+|                                |    (2.63) |    (2.64) |   (2.63)  |
+|**Event Type (b)**              |           |           |           |  
+|      Battle - No Change of trty|           |-2.017\*** | -1.149\** | 
+|                                |           |    (0.44) |   (0.45)  |
+| Battle-Non-state actr wins trty|           |  1.954\** |  3.055\***|
+|                                |           |    (0.74) |   (0.74)  |
+|Headquarters or base established|           |-7.212\*** | -6.193\** |  
+|                                |           |  (1.96)   |   (1.95)  |
+|    Non-violent transfer of trty|           |-6.903\*** | -5.731\***| 
+|                                |           |  (0.72)   |   (0.72)  |
+|                 Remote Violence|           |-4.134\*** | -3.407\***|
+|                                |           |  (0.47)   |   (0.47)  |
+|                  Riots/Protests|           |-4.477\*** | -3.964\***|  
+|                                |           |  (0.56)   |   (0.56)  |
+|           Strategic Development|           |-6.030\*** | -5.262\***|
+|                                |           |  (0.46)   |   (0.48)  |
+|      Violence against civilians|           |-3.486\*** | -2.949\***|
+|                                |           |    (0.45) |   (0.45)  |
+|**Intercept**                   | 1.200     | 6.029\*   |  5.479\*  |  
+|                                |  (2.63)   |    (2.65) |   (2.66)  |
+|--------------------------------|-----------|-----------|-----------|
+|           **N**                |  35072    |  35072    |    35072  |
+|   **Adjusted R- squared**      |  0.034    |    0.049  |    0.063  |
+Collinearity: (a) Civilian group excluded; (b) Battle - Government regains territory excluded
+
+Model 3 controls for the country
+
+\*p < 0.05; \**p < 0.01; \***p < 0.001
+
+\pagebreak
+
+Table 3: Regression Table for Asia 
+
+Dependent variable: Fatalities
+
+|     **Variable**               |**Model 1**|**Model 2**|**Model 3**|
+|--------------------------------|-----------|-----------|-----------|
+|**Actor Type (a)**              |           |           |           |  
+|                 Ethnic Militia |   0.343   |  0.015    | -0.088    | 
+|                                |  (0.18)   |    (0.19) |   (0.19)  |
+|      Government/Mutinuous Force|  2.176\***|  1.951\***|  1.564\***|
+|                                |  (0.16)   |    (0.17) |   (0.17)  |
+|          Outside/External Force|  0.203    |  -0.150   |  -0.497*  |
+|                                |  (0.20)   |    (0.21) |   (0.21)  |
+|               Political Militia|  0.908\***|  0.617\***|  0.272    |  
+|                                |  (0.15)   |    (0.16) |   (0.16)  |
+|                      Protestors| -0.552\***| -0.088    | -0.422\*  |
+|                                |  (0.15)   |    (0.21) |   (0.21)  |
+|                     Rebel Force|  1.107\***|  0.810\***|  0.626\***|
+|                                |  (0.17)   |    (0.17) |   (0.18)  |
+|                         Rioters| -0.460\** | -0.010    | -0.242    |  
+|                                |  (0.15)   |    (0.21) |   (0.21)  |
+|**Event Type (b)**              |           |           |           |  
+|      Battle - No Change of trty|           |  -0.367   | -0.709    | 
+|                                |           |    (0.37) |   (0.37)  |
+| Battle-Non-state actr wins trty|           |  -3.360   |  -3.698   |
+|                                |           |    (2.23) |   (2.21)  |
+|    Non-violent transfer of trty|           | -1.642    |  -1.811   | 
+|                                |           |  (1.60)   |   (1.58)  |
+|                 Remote Violence|           | -0.313    | -0.574    |
+|                                |           |  (0.38)   |   (0.38)  |
+|                  Riots/Protests|           | -1.320\** | -1.579\***|  
+|                                |           |  (0.40)   |   (0.40)  |
+|           Strategic Development|           | -2.418\***| -2.664\***|
+|                                |           |  (0.39)   |   (0.39)  |
+|      Violence against civilians|           |-0.695     | -0.945\*  |
+|                                |           |    (0.37) |   (0.38)  |
+|**Intercept**                   | 0.555***  | 1.408\*** |  1.736\***|  
+|                                |  (0.15)   |    (0.40) |   (0.41)  |
+|--------------------------------|-----------|-----------|-----------|
+|           **N**                |  24366    |  24366    |    24366  |
+|   **Adjusted R- squared**      |  0.089    |    0.098  |    0.114  |
+Collinearity: (a) Civilian group excluded; (b) Battle - Government regains territory excluded
+
+Model 3 controls for the country
+
+\*p < 0.05; \**p < 0.01; \***p < 0.001

@@ -1,0 +1,67 @@
+---
+title: "Fatalities in political conflicts"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: column
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library (plotly)
+library (ggplot2)
+library (readxl)
+library (dplyr)
+library (ggmap)
+Africa <- read_excel("C:/Users/Shruti Gogia/Dropbox/Final R/ACLED-Africa.xlsx")
+Asia2015 <- read_excel("C:/Users/Shruti Gogia/Dropbox/Final R/ACLED-Asia-2015.xlsx")
+Asia2016 <- read_excel("C:/Users/Shruti Gogia/Dropbox/Final R/ACLED-Asia-2016.xlsx")
+Africa2015 <- Africa %>% filter(YEAR=="2015")
+Africa2016 <- Africa %>% filter(YEAR=="2016")
+Africa2015$continent <- "Africa"
+Africa2016$continent <- "Africa"
+Asia2015$continent <- "Asia"
+Asia2016$continent <- "Asia"
+ACLED_Final <- bind_rows(Africa2015,Africa2016,Asia2015,Asia2016)
+ACLED_Final <- ACLED_Final %>% select ("GWNO", "continent", everything())
+ACLED_Final <- ACLED_Final[!is.na(ACLED_Final$LATITUDE),]
+ACLED_Final <- ACLED_Final[!is.na(ACLED_Final$LONGITUDE),]
+ACLED_Final$EVENT_TYPE[ACLED_Final$EVENT_TYPE=="RIots/Protests"] <- "Riots/Protests"
+ACLED_Final$EVENT_TYPE[ACLED_Final$EVENT_TYPE=="Battle-Non-state actors overtake territory"] <- "Battle-Non-state actor overtakes territory"
+ACLED_Final$EVENT_TYPE[ACLED_Final$EVENT_TYPE=="Violence against civilians"] <- "Violence against civilians"
+ACLED_Final <- transform(ACLED_Final, YEAR = as.character(YEAR))
+colnames(ACLED_Final)[colnames(ACLED_Final)=="INTER1"] <- "ACTOR_TYPE1"
+colnames(ACLED_Final)[colnames(ACLED_Final)=="INTER2"] <- "ACTOR_TYPE2"
+
+
+```
+
+
+Column
+-----------------------------------------------------------------------
+
+### Map of Asia showing details of political conflicts
+
+```{r}
+AsiaMaps <- ACLED_Final %>% filter(continent=="Asia")
+Asiabbox <- make_bbox(LONGITUDE, LATITUDE, data=AsiaMaps, f=0.05)
+AsiaMaps2 <- get_map(Asiabbox)
+AsiaMaps3 <- ggmap(AsiaMaps2) + 
+  geom_point(aes(x=LONGITUDE, y=LATITUDE, size = FATALITIES, color=FATALITIES),data=AsiaMaps) + 
+  scale_color_gradient(limits = c(0,90), low = "indianred1", high = "indianred4")
+ggplotly(AsiaMaps3)
+```
+
+Column
+-----------------------------------------------------------------------
+
+### Map of Africa showing details of political conflicts
+
+```{r}
+AfricaMaps <- ACLED_Final %>% filter(continent=="Africa")
+Africabbox <- make_bbox(LONGITUDE, LATITUDE, data=AfricaMaps, f=0.16)
+AfricaMaps2 <- get_map(Africabbox)
+AfricaMaps3 <- ggmap(AfricaMaps2) + 
+  geom_point(aes(x=LONGITUDE, y=LATITUDE, size = FATALITIES, color=FATALITIES),data=AfricaMaps) + 
+  scale_color_gradient(limits = c(0,90), low = "indianred1", high = "indianred4")
+ggplotly(AfricaMaps3)
+```
