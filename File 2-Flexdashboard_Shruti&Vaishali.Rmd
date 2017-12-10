@@ -1,0 +1,112 @@
+---
+title: "Fatalities in armed conflicts"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: row
+    fill: scroll
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library (plotly)
+library (ggplot2)
+library (readxl)
+library (dplyr)
+library (ggmap)
+
+Africa <- read_excel("C:/Users/Shruti Gogia/Dropbox/Final R/ACLED-Africa.xlsx")
+Asia2015 <- read_excel("C:/Users/Shruti Gogia/Dropbox/Final R/ACLED-Asia-2015.xlsx")
+Asia2016 <- read_excel("C:/Users/Shruti Gogia/Dropbox/Final R/ACLED-Asia-2016.xlsx")
+Africa2015 <- Africa %>% filter(YEAR=="2015")
+Africa2016 <- Africa %>% filter(YEAR=="2016")
+Africa2015$continent <- "Africa"
+Africa2016$continent <- "Africa"
+Asia2015$continent <- "Asia"
+Asia2016$continent <- "Asia"
+ACLED_Final <- bind_rows(Africa2015,Africa2016,Asia2015,Asia2016)
+ACLED_Final <- ACLED_Final %>% select ("GWNO", "continent", everything())
+ACLED_Final <- ACLED_Final[!is.na(ACLED_Final$LATITUDE),]
+ACLED_Final <- ACLED_Final[!is.na(ACLED_Final$LONGITUDE),]
+ACLED_Final$EVENT_TYPE[ACLED_Final$EVENT_TYPE=="RIots/Protests"] <- "Riots/Protests"
+ACLED_Final$EVENT_TYPE[ACLED_Final$EVENT_TYPE=="Battle-Non-state actors overtake territory"] <- "Battle-Non-state actor overtakes territory"
+ACLED_Final$EVENT_TYPE[ACLED_Final$EVENT_TYPE=="Violence against civilians"] <- "Violence against civilians"
+ACLED_Final <- transform(ACLED_Final, YEAR = as.character(YEAR))
+colnames(ACLED_Final)[colnames(ACLED_Final)=="INTER1"] <- "ACTOR_TYPE1"
+colnames(ACLED_Final)[colnames(ACLED_Final)=="INTER2"] <- "ACTOR_TYPE2"
+
+ACLED_Final$ACTOR_NAME1 <- NA
+ACLED_Final$ACTOR_NAME1[ACLED_Final$ACTOR_TYPE1==1] <- "Government or mutinous force"
+ACLED_Final$ACTOR_NAME1[ACLED_Final$ACTOR_TYPE1==2] <- "Rebel force"
+ACLED_Final$ACTOR_NAME1[ACLED_Final$ACTOR_TYPE1==3] <- "Political militia"
+ACLED_Final$ACTOR_NAME1[ACLED_Final$ACTOR_TYPE1==4] <- "Ethnic militia"
+ACLED_Final$ACTOR_NAME1[ACLED_Final$ACTOR_TYPE1==5] <- "Rioters"
+ACLED_Final$ACTOR_NAME1[ACLED_Final$ACTOR_TYPE1==6] <- "Protesters"
+ACLED_Final$ACTOR_NAME1[ACLED_Final$ACTOR_TYPE1==7] <- "Civilians"
+ACLED_Final$ACTOR_NAME1[ACLED_Final$ACTOR_TYPE1==8] <- "Outside/external force"
+
+
+#Asia
+AsiaMaps <- ACLED_Final %>% filter(continent=="Asia")
+AsiaMaps1 <- AsiaMaps %>% filter(EVENT_TYPE %in% c("Riots/Protests", "Battle-No change of territory", "Violence against civilians")) %>% filter(FATALITIES > 0)
+Asiabbox <- make_bbox(LONGITUDE, LATITUDE, data=AsiaMaps1, f=0.05)
+AsiaMaps2 <- get_map(Asiabbox)
+
+#Africa
+AfricaMaps <- ACLED_Final %>% filter(continent=="Africa")
+AfricaMaps1 <- AfricaMaps %>% filter(EVENT_TYPE %in% c("Riots/Protests", "Battle-No change of territory", "Violence against civilians")) %>% filter(FATALITIES > 0)
+
+Africabbox <- make_bbox(LONGITUDE, LATITUDE, data=AfricaMaps, f=0.16)
+AfricaMaps2 <- get_map(Africabbox)
+
+
+```
+
+
+Row
+-----------------------------------------------------------------------
+
+### Map 1: Asia-Armed conflicts according to event type
+
+```{r}
+Map1 <- ggmap(AsiaMaps2) + 
+  geom_point(aes(x=LONGITUDE, y=LATITUDE, color=EVENT_TYPE, shape = EVENT_TYPE),data=AsiaMaps1)+
+  scale_size_manual(values = c(0.1,1,10))+
+  scale_color_manual(values = c("midnightblue", "chartreuse4", "red4")) 
+ggplotly(Map1)
+```
+
+
+### Map 2: Asia - Armed conflicts according to actor type
+
+```{r}
+Map2 <- ggmap(AsiaMaps2) + 
+  geom_point(aes(x=LONGITUDE, y=LATITUDE, color=ACTOR_NAME1),data=AsiaMaps) +
+  scale_color_manual(values = c("pink", "yellow","green","black","maroon","blue", "orange", "purple"))
+
+ggplotly(Map2)
+```
+
+
+Row
+---------------------------------------------------------
+
+### Map 3: Africa - Armed conflicts according to event type
+
+```{r}
+Map3 <- ggmap(AfricaMaps2) + 
+  geom_point(aes(x=LONGITUDE, y=LATITUDE, color=EVENT_TYPE, shape = EVENT_TYPE),data=AfricaMaps1)+
+  scale_size_manual(values = c(0.1,1,10))  +
+  scale_color_manual(values = c("midnightblue", "chartreuse4", "red4")) 
+ggplotly(Map3)
+```
+
+
+### Map 4: Africa - Armed conflicts according to actor type
+
+```{r}
+Map4 <- ggmap(AfricaMaps2) + 
+  geom_point(aes(x=LONGITUDE, y=LATITUDE, color=ACTOR_NAME1),data=AfricaMaps) +
+ scale_color_manual(values = c("pink", "yellow","green","black","maroon","blue", "orange", "purple"))
+
+ggplotly(Map4)
+```
